@@ -1,6 +1,6 @@
 package shapeless.contrib
 
-package object scalaz extends Instances with Functions with Lifts with Lenses with FreeInstances{
+package object scalaz extends Instances with Functions with Lifts with Lenses with FreeInstances with CofreeInstances{
 
   object instances extends Instances
 
@@ -13,6 +13,8 @@ package object scalaz extends Instances with Functions with Lifts with Lenses wi
   object binary extends BinarySyntax
 
   object free extends FreeInstances
+
+  object cofree extends CofreeInstances
 
 }
 
