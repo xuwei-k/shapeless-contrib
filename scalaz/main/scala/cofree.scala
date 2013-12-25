@@ -26,7 +26,7 @@ trait CofreeInstances extends CofreeInstances0 {
 
   implicit final def cofreeShow[F[+_], A](implicit A: Show[A], F: shapeless.Lazy[Show[F[Cofree[F, A]]]]): Show[Cofree[F, A]] =
     Show.shows{ a =>
-      "Cofree(" + A.shows(a.head) + ", " + F.value.shows(a.tail) + ")"
+      "Cofree(" + A.shows(a.head) + "," + F.value.shows(a.tail) + ")"
     }
 
 }

@@ -51,9 +51,8 @@ class CofreeTest extends Spec with ScalazMatchers{
     Order[Cofree[Option, Int]].order(a, b) must_== Order[List[Int]].order(aa, bb)
   }
 
-  "Cofree[List, Int] shows" ! {
-    Show[Cofree[List, Int]].shows(Cofree(1, List(Cofree(2, List(Cofree(3, Nil))), Cofree(4, Nil)))) must_==
-      """Cofree(1, [Cofree(2, [Cofree(3, [])]),Cofree(4, [])])"""
+  "Show[Cofree[Option, Int]]" ! prop{ a: Cofree[Option, Int] =>
+    Show[Cofree[Option, Int]].shows(a) must_== a.toString
   }
 
 }
