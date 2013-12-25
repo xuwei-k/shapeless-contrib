@@ -2,12 +2,11 @@ package shapeless.contrib.scalaz
 
 import org.specs2.scalaz.{Spec, ScalazMatchers}
 import scalaz.scalacheck.ScalazArbitrary._
-import scalaz.scalacheck.ScalazProperties._
+import scalaz.scalacheck.ScalazProperties.order
 import scalaz.scalacheck.ScalaCheckBinding._
-import scalaz._
-import scalaz.Isomorphism._
+import scalaz._, Isomorphism._
 import scalaz.std.AllInstances._
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary
 
 class CofreeTest extends Spec with ScalazMatchers{
 

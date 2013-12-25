@@ -1,24 +1,21 @@
 package shapeless.contrib.scalaz
 
 import org.specs2.scalaz.Spec
-import scalaz.scalacheck.ScalazArbitrary._
-import scalaz.scalacheck.ScalazProperties._
+import scalaz.scalacheck.ScalazProperties.order
 import scalaz.scalacheck.ScalaCheckBinding._
 import scalaz._, Free._
 import scalaz.std.AllInstances._
-import shapeless.contrib.scalaz.free._
 import org.scalacheck.{Arbitrary, Gen}
 
 class FreeTest extends Spec {
 
-  // TODO Gosub
   implicit def freeArbitrary[F[+_]: Functor, A](implicit
     A: Arbitrary[A],
     F0: shapeless.Lazy[Arbitrary[F[Free[F, A]]]]
   ): Arbitrary[Free[F, A]] =
-    Arbitrary(Gen.frequency(
-      (1, Functor[Arbitrary].map(A)(Return[F, A](_)).arbitrary),
-      (1, Functor[Arbitrary].map(F0.value)(Suspend[F, A](_)).arbitrary)
+    Arbitrary(Gen.oneOf(
+      Functor[Arbitrary].map(A)(Return[F, A](_)).arbitrary,
+      Functor[Arbitrary].map(F0.value)(Suspend[F, A](_)).arbitrary
     ))
 
   type PairOpt[+A] = Option[(A, A)]
