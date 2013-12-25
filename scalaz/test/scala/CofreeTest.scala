@@ -14,9 +14,9 @@ class CofreeTest extends Spec with ScalazMatchers{
 
   val treeCofreeListIso: Tree <~> CofreeList =
     new IsoFunctorTemplate[Tree, CofreeList] {
-      def to[A](tree: Tree[A]): CofreeList[A] =
+      def to[A](tree: Tree[A]) =
         Cofree(tree.rootLabel, tree.subForest.map(to).toList)
-      def from[A](c: CofreeList[A]): Tree[A] =
+      def from[A](c: CofreeList[A]) =
         Tree.node(c.head, c.tail.map(from(_)).toStream)
     }
 
