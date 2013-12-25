@@ -20,8 +20,10 @@ class CofreeTest extends Spec with ScalazMatchers{
         Tree.node(c.head, c.tail.map(from(_)).toStream)
     }
 
-  def cofreeOpt2List[A](fa: Cofree[Option, A]): List[A] =
-    fa.head :: fa.tail.map(cofreeOpt2List).getOrElse(Nil)
+  implicit class CofreeOps[A](self: Cofree[Option, A]){
+    def toList: List[A] =
+      self.head :: self.tail.map(_.toList).getOrElse(Nil)
+  }
 
   implicit def CofreeArb[F[+_]: Functor, A](implicit A: Arbitrary[A], F: shapeless.Lazy[Arbitrary[F[Cofree[F, A]]]]): Arbitrary[Cofree[F, A]] =
     Apply[Arbitrary].apply2(A, F.value)(Cofree(_, _))
@@ -44,8 +46,8 @@ class CofreeTest extends Spec with ScalazMatchers{
   }
 
   "Order[Cofree[Option, Int]] is Order[List[Int]]" ! prop{ (a: Cofree[Option, Int], b: Cofree[Option, Int]) =>
-    val aa = cofreeOpt2List(a)
-    val bb = cofreeOpt2List(b)
+    val aa = a.toList
+    val bb = b.toList
     Equal[Cofree[Option, Int]].equal(a, b) must_== Equal[List[Int]].equal(aa, bb)
     Order[Cofree[Option, Int]].order(a, b) must_== Order[List[Int]].order(aa, bb)
   }
