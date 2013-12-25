@@ -4,7 +4,7 @@ import org.specs2.scalaz.Spec
 import scalaz.scalacheck.ScalazArbitrary._
 import scalaz.scalacheck.ScalazProperties._
 import scalaz.scalacheck.ScalaCheckBinding._
-import scalaz._
+import scalaz._, Free._
 import scalaz.std.AllInstances._
 import shapeless.contrib.scalaz.free._
 import org.scalacheck.{Arbitrary, Gen}
@@ -17,14 +17,39 @@ class FreeTest extends Spec {
     F0: shapeless.Lazy[Arbitrary[F[Free[F, A]]]]
   ): Arbitrary[Free[F, A]] =
     Arbitrary(Gen.frequency(
-      (1, Functor[Arbitrary].map(A)(Free.Return[F, A](_)).arbitrary),
-      (1, Functor[Arbitrary].map(F0.value)(Free.Suspend[F, A](_)).arbitrary)
+      (1, Functor[Arbitrary].map(A)(Return[F, A](_)).arbitrary),
+      (1, Functor[Arbitrary].map(F0.value)(Suspend[F, A](_)).arbitrary)
     ))
 
-  checkAll(order.laws[Free[Option, Int]])
+  type PairOpt[+A] = Option[(A, A)]
+  type FList[A] = Free[PairOpt, A] // Free Monad List
 
-  "Free[Option, Int] shows" ! prop{ a: Free[Option, Int] =>
-    Show[Free[Option, Int]].shows(a) must_== a.toString
+  implicit val pairOptFunctor: Functor[PairOpt] =
+    new Functor[PairOpt]{
+      def map[A, B](fa: PairOpt[A])(f: A => B) =
+        fa.map{ t => (f(t._1), f(t._2)) }
+    }
+
+  implicit class ListOps[A](self: List[A]){
+    def toFList: FList[A] = self match {
+      case h :: t =>
+        Suspend[PairOpt, A](Option((Return[PairOpt, A](h), t.toFList)))
+      case Nil =>
+        Suspend[PairOpt, A](None)
+    }
+  }
+
+  checkAll(order.laws[FList[Int]])
+
+  "Order[List[Int]] is Order[FList[Int]]" ! prop{ (a: List[Int], b: List[Int]) =>
+    val aa = a.toFList
+    val bb = b.toFList
+    Equal[List[Int]].equal(a, b) must_== Equal[FList[Int]].equal(aa, bb)
+    Order[List[Int]].order(a, b) must_== Order[FList[Int]].order(aa, bb)
+  }
+
+  "shows" ! prop{ a: FList[Int] =>
+    Show[FList[Int]].shows(a) must_== a.toString
   }
 
 }
