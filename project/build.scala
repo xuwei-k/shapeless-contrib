@@ -140,6 +140,19 @@ object ShapelessContribBuild extends Build {
     )
   )
 
+  lazy val argonaut = Project(
+    id = "argonaut",
+    base = file("argonaut"),
+    dependencies = Seq(scalaz, scalacheck % "test"),
+    settings = standardSettings ++ Seq(
+      name := "shapeless-argonaut",
+      hasMacros,
+      libraryDependencies ++= Seq(
+        "io.argonaut" %% "argonaut" % "6.0.1"
+      )
+    )
+  )
+
   lazy val spire = Project(
     id = "spire",
     base = file("spire"),
