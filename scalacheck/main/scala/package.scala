@@ -7,7 +7,7 @@ import org.scalacheck.{Gen, Arbitrary}
 package object scalacheck {
 
   // TODO this is terrible
-  private lazy val _emptyCoproduct: Gen[Nothing] = Gen(_ => None)
+  private lazy val _emptyCoproduct: Gen[Nothing] = Gen.oneOf(Nil)
 
   implicit def ArbitraryI: TypeClass[Arbitrary] = new TypeClass[Arbitrary] {
 
