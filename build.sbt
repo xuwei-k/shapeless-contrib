@@ -20,6 +20,7 @@ val scalazSpecs2Version = "0.5.2"
 lazy val commonSettings = Seq(
   scalacOptions := Seq(
     "-feature",
+   // "-Ypartial-unification",
     "-language:higherKinds",
     "-language:implicitConversions",
     "-deprecation",

@@ -3,7 +3,8 @@ package shapelezz
 import scalaz.scalacheck.ScalazArbitrary._
 import scalaz.scalacheck.ScalazProperties.order
 import scalaz.scalacheck.ScalaCheckBinding._
-import scalaz._, Isomorphism._
+import scalaz._
+import scalaz.Isomorphism._
 import scalaz.std.AllInstances._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop.forAll

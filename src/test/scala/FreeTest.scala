@@ -18,7 +18,7 @@ class FreeTest extends Spec {
       Functor[Arbitrary].map(F0.value)(Free.roll[F, A](_)).arbitrary
     ))
 
-  type PairOpt[A] = Option[(A, A)]
+  type PairOpt[A] = Maybe[(A, A)]
   type FList[A] = Free[PairOpt, A] // Free Monad List
 
   implicit val pairOptFunctor: Functor[PairOpt] =
@@ -30,9 +30,9 @@ class FreeTest extends Spec {
   implicit class ListOps[A](self: List[A]){
     def toFList: FList[A] = self match {
       case h :: t =>
-        Free.roll[PairOpt, A](Option((Free.point[PairOpt, A](h), t.toFList)))
+        Free.roll[PairOpt, A](Maybe.just((Free.point[PairOpt, A](h), t.toFList)))
       case Nil =>
-        Free.liftF[PairOpt, A](None)
+        Free.liftF[PairOpt, A](Maybe.empty)
     }
   }
 
