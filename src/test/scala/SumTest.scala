@@ -1,10 +1,7 @@
-package shapeless.contrib.scalaz
-
-import shapeless.contrib.scalacheck._
-
-import org.specs2.scalaz.Spec
+package shapelezz
 
 import scalaz.scalacheck.ScalazProperties._
+import org.scalacheck.ScalacheckShapeless._
 
 class SumTest extends Spec {
 
@@ -18,5 +15,3 @@ class SumTest extends Spec {
   checkAll("cases", order.laws[Cases[String, Int]])
 
 }
-
-// vim: expandtab:ts=2:sw=2

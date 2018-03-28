@@ -1,4 +1,4 @@
-package shapeless.contrib.scalaz
+package  shapelezz
 
 import scalaz.{Semigroup, Monoid, Equal, Order, Show, Ordering, Cord}
 

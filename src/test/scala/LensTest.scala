@@ -1,10 +1,8 @@
-package shapeless.contrib.scalaz
+package shapelezz
 
 import shapeless.Lens
 import shapeless.Nat._
 import shapeless.contrib.scalacheck._
-
-import org.specs2.scalaz.Spec
 
 import scalaz.scalacheck.ScalazProperties._
 

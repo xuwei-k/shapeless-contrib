@@ -1,12 +1,9 @@
-package shapeless.contrib.scalaz
-
-import org.specs2.scalaz.Spec
+package shapelezz
 
 import org.scalacheck.Arbitrary
-
+import org.scalacheck.Prop.forAll
 import scalaz._
 import scalaz.scalacheck.ScalazArbitrary._
-
 import shapeless._
 
 class TraverseTest extends Spec {
@@ -30,11 +27,11 @@ class TraverseTest extends Spec {
     implicit def caseOption[T] = at[Option[T]](optToValidation)
   }
 
-  "traversing Set with Set => Option" ! prop { (x: Set[Int], y: Set[String], z: Set[Float]) =>
+  "traversing Set with Set => Option" ! forAll { (x: Set[Int], y: Set[String], z: Set[Float]) =>
     traverse(x :: y :: z :: HNil)(headOption) must_== ((x.headOption |@| y.headOption |@| z.headOption) { _ :: _ :: _ :: HNil })
   }
 
-  "traversing Option with Option => Validation" ! prop {(x: Option[Int], y: Option[String], z: Option[Float]) =>
+  "traversing Option with Option => Validation" ! forAll {(x: Option[Int], y: Option[String], z: Option[Float]) =>
     traverse(x :: y :: z :: HNil)(optionToValidation) must_==
       ((optToValidation(x) |@| optToValidation(y) |@| optToValidation(z)) { _ :: _ :: _ :: HNil })
   }

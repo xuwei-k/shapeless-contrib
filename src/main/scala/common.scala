@@ -21,5 +21,3 @@ trait Isomorphic[+C[_], A, B] {
   def to: A => B
   def from: B => A
 }
-
-// vim: expandtab:ts=2:sw=2

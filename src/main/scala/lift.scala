@@ -1,4 +1,4 @@
-package shapeless.contrib.scalaz
+package  shapelezz
 
 import scalaz._
 import scalaz.syntax.applicative._
@@ -39,5 +39,3 @@ trait Lifts {
   }
 
 }
-
-// vim: expandtab:ts=2:sw=2

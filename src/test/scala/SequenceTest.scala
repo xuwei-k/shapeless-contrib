@@ -1,10 +1,8 @@
-package shapeless.contrib.scalaz
-
-import org.specs2.scalaz.Spec
+package shapelezz
 
 import scalaz._
 import scalaz.scalacheck.ScalazArbitrary._
-
+import org.scalacheck.Prop.forAll
 import shapeless._
 
 class SequenceTest extends Spec {
@@ -14,17 +12,17 @@ class SequenceTest extends Spec {
   import scalaz.syntax.apply._
   import scalaz.concurrent.Future
 
-  "sequencing Option" ! prop { (x: Option[Int], y: Option[String], z: Option[Float]) =>
+  "sequencing Option" ! forAll { (x: Option[Int], y: Option[String], z: Option[Float]) =>
     sequence(x :: y :: z :: HNil) must_== ((x |@| y |@| z) { _ :: _ :: _ :: HNil })
   }
 
-  "sequencing Validation" ! prop { (x: Validation[String, Int], y: Validation[String, String], z: Validation[String, Float]) =>
+  "sequencing Validation" ! forAll { (x: Validation[String, Int], y: Validation[String, String], z: Validation[String, Float]) =>
     sequence(x :: y :: z :: HNil) must_== ((x |@| y |@| z) { _ :: _ :: _ :: HNil })
   }
 
   // note: using the ValidationNel type alias here breaks the implicit search
   // see https://github.com/typelevel/shapeless-contrib/issues/20
-  "sequencing ValidationNel" ! prop { (x: Validation[NonEmptyList[String], Int], y: Validation[NonEmptyList[String], String], z: Validation[NonEmptyList[String], Float]) =>
+  "sequencing ValidationNel" ! forAll { (x: Validation[NonEmptyList[String], Int], y: Validation[NonEmptyList[String], String], z: Validation[NonEmptyList[String], Float]) =>
     sequence(x :: y :: z :: HNil) must_== ((x |@| y |@| z) { _ :: _ :: _ :: HNil })
   }
 
@@ -40,14 +38,12 @@ class SequenceTest extends Spec {
   }
 */
 
-  "sequencing \\/" ! prop { (x: String \/ Int, y: String \/ String, z: String \/ Float) =>
+  "sequencing \\/" ! forAll { (x: String \/ Int, y: String \/ String, z: String \/ Float) =>
     sequence(x :: y :: z :: HNil) must_== ((x |@| y |@| z) { _ :: _ :: _ :: HNil })
   }
 
-  "sequencing Futures" ! prop { (x: Future[Int], y: Future[String], z: Future[Float]) =>
+  "sequencing Futures" ! forAll { (x: Future[Int], y: Future[String], z: Future[Float]) =>
     sequence(x :: y :: z :: HNil).run must_== (((x |@| y |@| z) { _ :: _ :: _ :: HNil }).run)
   }
 
 }
-
-// vim: expandtab:ts=2:sw=2

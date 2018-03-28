@@ -1,4 +1,4 @@
-package shapeless.contrib.scalaz
+package  shapelezz
 
 trait LensOps[A, B] {
 
@@ -24,5 +24,3 @@ trait Lenses {
   }
 
 }
-
-// vim: expandtab:ts=2:sw=2

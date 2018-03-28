@@ -1,4 +1,4 @@
-package shapeless.contrib.scalaz
+package  shapelezz
 
 import shapeless._
 import shapeless.ops.hlist._

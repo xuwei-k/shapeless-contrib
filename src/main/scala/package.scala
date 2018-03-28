@@ -1,6 +1,4 @@
-package shapeless.contrib
-
-package object scalaz extends Instances with Functions with Lifts with Lenses with FreeInstances with CofreeInstances {
+package object shapelezz extends Instances with Functions with Lifts with Lenses with FreeInstances with CofreeInstances {
 
   object instances extends Instances
 
@@ -17,5 +15,3 @@ package object scalaz extends Instances with Functions with Lifts with Lenses wi
   object cofree extends CofreeInstances
 
 }
-
-// vim: expandtab:ts=2:sw=2

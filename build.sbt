@@ -55,6 +55,8 @@ lazy val shapelessScalaz = crossProject(JVMPlatform, JSPlatform)
     coreSettings,
     scalapropsCoreSettings,
     libraryDependencies ++= Seq(
+      "com.github.alexarchambault" %%% "scalacheck-shapeless_1.13" % "1.1.8" % "test",
+      "com.github.scalaprops" %%% "scalaprops-magnolia" % "0.1.2" % "test",
       "com.chuusai" %%% "shapeless" % shapelessVersion,
       "org.scalaz" %%% "scalaz-core" % scalazVersion,
       "com.github.scalaprops" %%% "scalaprops" % scalapropsVersion % "test",

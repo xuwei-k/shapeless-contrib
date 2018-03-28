@@ -1,18 +1,20 @@
-package shapeless.contrib.scalaz
+package  shapelezz
 
 import scalaz.{Equal, \/}
 import scalaz.std.AllInstances._
 import scalaprops._
 import scalaprops.Property.forAll
+import scalaprops.ScalapropsMagnolia._
 
 object BinaryTest extends Scalaprops {
+  private[this] implicit val stringGen: Gen[String] = Gen.asciiString
 
   def binaryLaws[A : Binary : Equal : Gen] =
     forAll { (a: A, rest: Vector[Byte]) =>
       val encoded = Binary[A] encode a
       val decoded = Binary[A] decode (encoded ++ rest)
       Equal[Option[(A, Vector[Byte])]].equal(decoded, Some((a, rest)))
-    }
+    }.toProperties(())
 
   val int = binaryLaws[Int]
   val `(Int, Int)` = binaryLaws[(Int, Int)]
@@ -40,7 +42,7 @@ object BinaryTest extends Scalaprops {
 
   val tuple2Auto = {
     implicit val instance = Binary.auto.derive[(Int, String)]
-    binaryLaws[(Int, String)]("Tuple2")
+    binaryLaws[(Int, String)]
   }
 
   sealed trait Cases[A, B]
@@ -54,7 +56,7 @@ object BinaryTest extends Scalaprops {
   val `multi-case class instances` = {
     import Binary.auto._
 
-    Property.list(
+    Properties.list(
       binaryLaws[Cases[OneElem, TwoElem]],
       binaryLaws[Cases[Complex, Complex]],
       binaryLaws[Tree[Int]],
@@ -68,7 +70,7 @@ object BinaryTest extends Scalaprops {
     // let's manipulate the last byte of the checksum
     val manipulated = encoded.init :+ (encoded.last + 1).toByte
     val result = binary decode manipulated
-    assert(result.isEmpty, result)
+    result.isEmpty
   }
 
 }

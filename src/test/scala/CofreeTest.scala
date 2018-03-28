@@ -1,14 +1,14 @@
-package shapeless.contrib.scalaz
+package shapelezz
 
-import org.specs2.scalaz.{Spec, ScalazMatchers}
 import scalaz.scalacheck.ScalazArbitrary._
 import scalaz.scalacheck.ScalazProperties.order
 import scalaz.scalacheck.ScalaCheckBinding._
 import scalaz._, Isomorphism._
 import scalaz.std.AllInstances._
 import org.scalacheck.Arbitrary
+import org.scalacheck.Prop.forAll
 
-class CofreeTest extends Spec with ScalazMatchers{
+class CofreeTest extends Spec {
 
   type CofreeList[A] = Cofree[List, A]
 
@@ -25,7 +25,7 @@ class CofreeTest extends Spec with ScalazMatchers{
       self.head :: self.tail.map(_.toList).getOrElse(Nil)
   }
 
-  implicit def CofreeArb[F[+_]: Functor, A](implicit A: Arbitrary[A], F: shapeless.Lazy[Arbitrary[F[Cofree[F, A]]]]): Arbitrary[Cofree[F, A]] =
+  implicit def CofreeArb[F[_]: Functor, A](implicit A: Arbitrary[A], F: shapeless.Lazy[Arbitrary[F[Cofree[F, A]]]]): Arbitrary[Cofree[F, A]] =
     Apply[Arbitrary].apply2(A, F.value)(Cofree[F, A](_, _))
 
   implicit def CofreeListArb[A: Arbitrary]: Arbitrary[CofreeList[A]] =
@@ -41,11 +41,11 @@ class CofreeTest extends Spec with ScalazMatchers{
     treeCofreeListIso.to(treeCofreeListIso.from(b)) must equal(b)
   }*/
 
-  "Equal[Cofree[List, Int]] is Equal[Tree[Int]]" ! prop{ (a: Cofree[List, Int], b: Cofree[List, Int]) =>
+  "Equal[Cofree[List, Int]] is Equal[Tree[Int]]" ! forAll { (a: Cofree[List, Int], b: Cofree[List, Int]) =>
     Equal[Cofree[List, Int]].equal(a, b) must_== Equal[Tree[Int]].equal(treeCofreeListIso.from(a), treeCofreeListIso.from(b))
   }
 
-  "Order[Cofree[Option, Int]] is Order[List[Int]]" ! prop{ (a: Cofree[Option, Int], b: Cofree[Option, Int]) =>
+  "Order[Cofree[Option, Int]] is Order[List[Int]]" ! forAll { (a: Cofree[Option, Int], b: Cofree[Option, Int]) =>
     val aa = a.toList
     val bb = b.toList
     Equal[Cofree[Option, Int]].equal(a, b) must_== Equal[List[Int]].equal(aa, bb)

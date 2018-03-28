@@ -1,7 +1,5 @@
-package shapeless.contrib.scalaz
+package  shapelezz
 
 trait Functions
   extends SequenceFunctions
   with TraverseFunctions
-
-// vim: expandtab:ts=2:sw=2

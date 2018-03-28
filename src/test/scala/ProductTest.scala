@@ -1,10 +1,7 @@
-package shapeless.contrib.scalaz
-
-import shapeless.contrib.scalacheck._
-
-import org.specs2.scalaz.Spec
+package shapelezz
 
 import scalaz.scalacheck.ScalazProperties._
+import org.scalacheck.ScalacheckShapeless._
 
 class ProductTest extends Spec {
 
@@ -22,5 +19,3 @@ class ProductTest extends Spec {
   checkAll("two elements", monoid.laws[TwoElem])
 
 }
-
-// vim: expandtab:ts=2:sw=2
