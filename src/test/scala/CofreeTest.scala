@@ -21,13 +21,34 @@ class CofreeTest extends Spec {
         Tree.node(c.head, c.tail.map(from(_)).toStream)
     }
 
-  implicit class CofreeOps[A](self: Cofree[Option, A]){
+  implicit class CofreeOps[A](self: Cofree[Maybe, A]){
     def toList: List[A] =
       self.head :: self.tail.map(_.toList).getOrElse(Nil)
   }
 
-  implicit def CofreeArb[F[_]: Functor, A](implicit A: Arbitrary[A], F: shapeless.Lazy[Arbitrary[F[Cofree[F, A]]]]): Arbitrary[Cofree[F, A]] =
-    Apply[Arbitrary].apply2(A, F.value)(Cofree[F, A](_, _))
+  type OneAndList[A] = OneAnd[List, A]
+  type CofreeMaybe[A] = Cofree[Maybe, A]
+
+  val oneAndListToCofreeMaybe: OneAndList ~> CofreeMaybe =
+    new (OneAndList ~> CofreeMaybe) {
+      override def apply[A](fa: OneAndList[A]) =
+        Cofree.unfold(fa) {
+          case OneAnd(a, h :: t) =>
+            (a, Maybe.just(OneAnd(h, t)))
+          case OneAnd(a, _) =>
+            (a, Maybe.empty)
+        }
+    }
+
+  implicit def CofreeMaybeArb[A: Arbitrary]: Arbitrary[CofreeMaybe[A]] = {
+    import org.scalacheck.Arbitrary._
+    import org.scalacheck.Gen
+    val arb = Arbitrary { Gen.listOfN(20, implicitly[Arbitrary[A]].arbitrary ) }
+    Functor[Arbitrary].map(arb){
+      case h :: Nil => oneAndListToCofreeMaybe(OneAnd(h, Nil))
+      case h :: t => oneAndListToCofreeMaybe(OneAnd(h, t))
+    }
+  }
 
   implicit def CofreeListArb[A: Arbitrary]: Arbitrary[CofreeList[A]] =
     Functor[Arbitrary].map(implicitly[Arbitrary[Tree[A]]])(treeCofreeListIso.to)
@@ -46,11 +67,11 @@ class CofreeTest extends Spec {
     Equal[Cofree[List, Int]].equal(a, b) must_== Equal[Tree[Int]].equal(treeCofreeListIso.from(a), treeCofreeListIso.from(b))
   }
 
-  "Order[Cofree[Option, Int]] is Order[List[Int]]" ! forAll { (a: Cofree[Option, Int], b: Cofree[Option, Int]) =>
+  "Order[Cofree[Maybe, Int]] is Order[List[Int]]" ! forAll { (a: Cofree[Maybe, Int], b: Cofree[Maybe, Int]) =>
     val aa = a.toList
     val bb = b.toList
-    Equal[Cofree[Option, Int]].equal(a, b) must_== Equal[List[Int]].equal(aa, bb)
-    Order[Cofree[Option, Int]].order(a, b) must_== Order[List[Int]].order(aa, bb)
+    Equal[Cofree[Maybe, Int]].equal(a, b) must_== Equal[List[Int]].equal(aa, bb)
+    Order[Cofree[Maybe, Int]].order(a, b) must_== Order[List[Int]].order(aa, bb)
   }
 
 }

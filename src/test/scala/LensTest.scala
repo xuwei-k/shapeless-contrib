@@ -2,8 +2,7 @@ package shapelezz
 
 import shapeless.Lens
 import shapeless.Nat._
-import shapeless.contrib.scalacheck._
-
+import org.scalacheck.ScalacheckShapeless._
 import scalaz.scalacheck.ScalazProperties._
 
 class LensTest extends Spec {

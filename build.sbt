@@ -14,8 +14,6 @@ val scalapropsVersion = "0.5.4"
 val shapelessVersion = "2.3.3"
 val scalazVersion = "7.2.20"
 val scalatestVersion = "3.0.5-M1"
-val specs2Version = "4.0.3"
-val scalazSpecs2Version = "0.5.2"
 
 lazy val commonSettings = Seq(
   scalacOptions := Seq(
@@ -62,10 +60,7 @@ lazy val shapelessScalaz = crossProject(JVMPlatform, JSPlatform)
       "org.scalaz" %%% "scalaz-core" % scalazVersion,
       "com.github.scalaprops" %%% "scalaprops" % scalapropsVersion % "test",
       "com.github.scalaprops" %%% "scalaprops-scalazlaws" % scalapropsVersion % "test",
-      "org.specs2" %%% "specs2-core" % specs2Version % "test",
-      "org.scalaz" %%% "scalaz-scalacheck-binding" % scalazVersion % "test",
-      "org.typelevel" %%% "shapeless-scalacheck" % "0.6.1" % "test",
-      "org.typelevel" %%% "scalaz-specs2" % scalazSpecs2Version % "test"
+      "org.scalaz" %%% "scalaz-scalacheck-binding" % s"${scalazVersion}-scalacheck-1.13" % "test"
     )
   )
   .jsSettings(commonJsSettings)
